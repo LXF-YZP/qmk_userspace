@@ -1,4 +1,13 @@
 {
     "userspace_version": "1.0",
-    "build_targets": []
+    "build_targets": [
+        ["ploopyco/pavonis", "default"],
+        ["ploopyco/pavonis", "debug"],
+        ["georgen/peacock/v1_00", "debug"],
+        ["georgen/peacock/v1_01", "debug"],
+        ["georgen/peacock/v1_01", "default"],
+        ["georgen/peacock/v1_00", "default"],
+        ["georgen/peacock/v1_00", "acrylic"],
+        ["georgen/peacock/v1_01", "acrylic"]
+    ]
 }
