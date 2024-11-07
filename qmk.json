@@ -3,6 +3,7 @@
     "build_targets": [
         ["ploopyco/pavonis", "default"],
         ["ploopyco/pavonis", "debug"],
+        ["ploopyco/pavonis", "stylus"],
         ["georgen/peacock/v1_00", "debug"],
         ["georgen/peacock/v1_01", "debug"],
         ["georgen/peacock/v1_01", "default"],
