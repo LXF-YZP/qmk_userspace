@@ -1,0 +1,2 @@
+#undef PROCYON_50_42
+#define PROCYON_42_50
