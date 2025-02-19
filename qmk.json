@@ -10,7 +10,9 @@
         ["georgen/peacock/v1_00", "default"],
         ["georgen/peacock/v1_00", "acrylic"],
         ["georgen/peacock/v1_01", "acrylic"],
-        ["bastardkb/dilemma/3x5_3", "default"],
+        ["georgen/peacock/v1_00", "stylus"],
+        ["georgen/peacock/v1_01", "stylus"],
+        ["bastardkb/dilemma/3x5_3_procyon", "default"]
 
     ]
 }

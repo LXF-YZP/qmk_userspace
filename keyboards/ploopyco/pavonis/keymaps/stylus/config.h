@@ -2,4 +2,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #define MAXTOUCH_BOOTLOADER_GESTURE
-#define DIGITIZER_HAS_STYLUS yes
+#define DIGITIZER_HAS_STYLUS
