@@ -4,6 +4,7 @@
         ["ploopyco/pavonis", "default"],
         ["ploopyco/pavonis", "debug"],
         ["ploopyco/pavonis", "stylus"],
+        ["ploopyco/pavonis", "taps_as_clicks"],
         ["georgen/peacock/v1_00", "debug"],
         ["georgen/peacock/v1_01", "debug"],
         ["georgen/peacock/v1_01", "default"],
