@@ -13,7 +13,8 @@
         ["georgen/peacock/v1_01", "acrylic"],
         ["georgen/peacock/v1_00", "stylus"],
         ["georgen/peacock/v1_01", "stylus"],
-        ["bastardkb/dilemma/3x5_3_procyon", "default"]
+        ["bastardkb/dilemma/3x5_3_procyon", "default"],
+	["handwired/onekey/rp2040", "digitizer"]
 
     ]
 }
