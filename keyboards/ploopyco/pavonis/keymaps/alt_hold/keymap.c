@@ -19,7 +19,7 @@ typedef enum {
     Abort
 } State;
 
-digitizer_t digitizer_task_kb(digitizer_t digitizer_state) {
+bool digitizer_task_kb(digitizer_t *const digitizer_state) {
     uint8_t contact_count = 0;
     static uint8_t first_contact_id = INVALID_ID;
     static uint32_t timer = 0;
@@ -28,7 +28,7 @@ digitizer_t digitizer_task_kb(digitizer_t digitizer_state) {
     // First count up the number of fingers, and if we found a first touch
     // keep a record of the finger id.
     for (int i = 0; i < DIGITIZER_FINGER_COUNT; i++) {
-        if(digitizer_state.contacts[i].tip) {
+        if(digitizer_state->contacts[i].tip) {
             contact_count++;
             if (first_contact_id == INVALID_ID) {
                 first_contact_id = i;
@@ -77,7 +77,7 @@ digitizer_t digitizer_task_kb(digitizer_t digitizer_state) {
             // If the second finger is released within 250ms, its a tap. So activate the hold gesture.
             if (contact_count == 1) {
                 state = Hold;
-                digitizer_state.button1 = true;
+                digitizer_state->button1 = true;
             }
             else if (timer_elapsed(timer) > 250) {
                 state = Abort;
@@ -88,15 +88,15 @@ digitizer_t digitizer_task_kb(digitizer_t digitizer_state) {
             // While we are holding, clear all touches other than the initial finger
             for (int i = 0; i < DIGITIZER_FINGER_COUNT; i++) {
                 if (i != first_contact_id) {
-                    digitizer_state.contacts[i].tip = false;
+                    digitizer_state->contacts[i].tip = false;
                 }
             }
-            digitizer_state.button1 = true;
+            digitizer_state->button1 = true;
             break;
         }
         case Abort:
             break;
     }
 
-    return digitizer_state;
+    return state == Hold;
 }
