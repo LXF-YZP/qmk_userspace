@@ -136,14 +136,14 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
         case None:
             break;
         case PossibleMove:
-            // If we got a single touch, we wait for 250ms before activating the drag detection.
+            // If we got a single touch, we wait for 100ms before activating the drag detection.
             // This should prevent two finger taps as being detected as hold.
 
             // If we detect anything other than 1 finger, abort.
             if (contact_count != 1) {
                 state = Abort;
             }
-            else if (timer_elapsed(timer) > 250) {
+            else if (timer_elapsed(timer) > 100) {
                 state = Move;
             }
             break;
@@ -172,12 +172,7 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
                 state = Move;
             }
             last_contact_count = contact_count;
-            // While we are holding, clear all touches other than the initial finger
-            for (int i = 0; i < DIGITIZER_FINGER_COUNT; i++) {
-                if (i != first_contact_id) {
-                    digitizer_state->contacts[i].tip = false;
-                }
-            }
+            // While we are holding, clear all touches other than the first finger
             digitizer_state->button1 = true;
             break;
         }
