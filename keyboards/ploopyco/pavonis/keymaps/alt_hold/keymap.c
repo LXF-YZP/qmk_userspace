@@ -56,7 +56,6 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
     if (state != Hold)
 #endif
     if (contact_count == 0) {
-        uprintf("Clear %d\n", state);
         state = None;
         first_contact_id = INVALID_ID;
     }
