@@ -12,6 +12,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {{{ KC_NO }}};
 
 // If defined, removing all fingers from the trackpad will not cancel the held button. To cancel repeat the drag gesture.
 #define HOLD_LOCK
+#define HOLD_TIMEOUT 500
 
 typedef enum {
     None,
@@ -27,6 +28,7 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
     static uint8_t first_contact_id = INVALID_ID;
     static uint32_t timer = 0;
     static State state = None;
+    static uint8_t last_contact_count = 0;
 
     // First count up the number of fingers, and if we found a first touch
     // keep a record of the finger id.
@@ -42,7 +44,13 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
         else {
             // If the initial contact is removed, abort.
 #ifdef HOLD_LOCK
-            if (state != Hold)
+            if (state == Hold) {
+                // Timeout the hold if there are no contacts
+                if (contact_count == 0 && timer_elapsed(timer) > HOLD_TIMEOUT) {
+                    first_contact_id = INVALID_ID;
+                    state = Abort;
+                }
+            } else
 #endif
             if (i == first_contact_id) {
                 first_contact_id = INVALID_ID;
@@ -64,14 +72,14 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
         case None:
             break;
         case PossibleMove:
-            // If we got a single touch, we wait for 100ms before activating the drag detection.
+            // If we got a single touch, we wait for 200ms before activating the drag detection.
             // This should prevent two finger taps as being detected as hold.
 
-            // If we detect anything other than 1 finger, abort. 
+            // If we detect anything other than 1 finger, abort.
             if (contact_count != 1) {
                 state = Abort;
             }
-            else if (timer_elapsed(timer) > 100) {
+            else if (timer_elapsed(timer) > 200) {
                 state = Move;
             }
             break;
@@ -95,15 +103,17 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
         case Hold:
         {
             // If the user taps with a second finger again, release the hold.
-            static uint8_t last_contact_count = 0; 
             if (contact_count == 1 && last_contact_count > 1) {
                 state = Move;
             }
             digitizer_state->button1 = true;
+            timer = timer_read32();
             break;
         }
         case Abort:
             break;
     }
+
+    last_contact_count = contact_count;
     return state == Hold;
 }
