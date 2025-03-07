@@ -10,6 +10,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {{{ KC_NO }}};
 
 #define INVALID_ID 0xff
 
+// If defined, removing all fingers from the trackpad will not cancel the held button. To cancel repeat the drag gesture.
+#define HOLD_LOCK
+
 typedef enum {
     None,
     PossibleMove,
@@ -38,6 +41,9 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
         }
         else {
             // If the initial contact is removed, abort.
+#ifdef HOLD_LOCK
+            if (state != Hold)
+#endif
             if (i == first_contact_id) {
                 first_contact_id = INVALID_ID;
                 state = Abort;
@@ -46,8 +52,12 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
     }
 
     // If all contacts are removed, reset and wait for new touches.
+#ifdef HOLD_LOCK
+    if (state != Hold)
+#endif
     if (contact_count == 0) {
-        state = None;;
+        uprintf("Clear %d\n", state);
+        state = None;
         first_contact_id = INVALID_ID;
     }
 
@@ -85,6 +95,12 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
             break;
         case Hold:
         {
+            // If the user taps with a second finger again, release the hold.
+            static uint8_t last_contact_count = 0; 
+            if (contact_count == 1 && last_contact_count > 1) {
+                state = Move;
+            }
+            last_contact_count = contact_count;
             // While we are holding, clear all touches other than the initial finger
             for (int i = 0; i < DIGITIZER_FINGER_COUNT; i++) {
                 if (i != first_contact_id) {
@@ -97,6 +113,5 @@ bool digitizer_task_kb(digitizer_t *const digitizer_state) {
         case Abort:
             break;
     }
-
     return state == Hold;
 }
